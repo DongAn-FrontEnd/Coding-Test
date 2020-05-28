@@ -23,7 +23,7 @@
    function solution4() {}
    ```
 
-5. 프로그래머스에서 출력된 테스트결과를 README.md에 이미지로 첨부해주세요.
+5. 프로그래머스에서 출력된 테스트결과를 README.md에 복붙해 첨부해주세요.
 6. 더 좋은 다른 사람의 풀이를 `function otherSolution1(){}로` 추가해주세요.
 
 
