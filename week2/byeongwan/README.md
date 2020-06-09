@@ -1,16 +1,45 @@
 # 1. 문자열 내 마음대로 정렬하기
-``` javascript
-    function solution(array, commands) {
+```javascript
+// 1. 각각의 알파벳 추출
+// 2. key: 알파벳 value: 그 알파벳의 인덱스의 구성을 갖는 해시 구현
+// 3. a ~ z까지 해시 탐색
+// 4. 추출한 값을 temp에 push
+// 5. temp를 정렬 후 answer에 push
+function solution(strings, n) {
     var answer = [];
+    let alphabets = [];
+    let map = new Map();
 
-    for (var i = 0; i < commands.length; ++i) {
-        var temp = array.slice(commands[i][0] - 1, commands[i][1]);
-        temp.sort(function(a, b){
-            return a - b;
-        });
-        answer.push(temp[commands[i][2] - 1])
+    // 각각의 알파벳을 alphabets에 넣는다.
+    strings.forEach(element => {
+        alphabets.push(element[n]);
+    });
+
+    // key: 알파벳 value: index 로 해시테이블 구성
+    for(let i = 0; i < alphabets.length; ++i){
+        if(map.get(alphabets[i]) === undefined){
+            let temp = [i];
+            map.set(alphabets[i], temp);
+        }else{
+            let temp = map.get(alphabets[i]);
+            temp.push(i);
+            map.set(alphabets[i], temp);
+        }
     }
-
+    
+    // 알파벳 a ~ z 순회
+    for(let i = 'a'; i <= 'z'; i =String.fromCharCode(i.charCodeAt(0) + 1)){
+        if(map.get(i) !== undefined){
+            let temp = [];
+            map.get(i).forEach(element =>{
+                 temp.push(strings[element]);
+            });
+            temp.sort();
+            temp.forEach(element=>{
+                answer.push(element);
+            });
+        }
+    }    
     return answer;
 }
 ```
