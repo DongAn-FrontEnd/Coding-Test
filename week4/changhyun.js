@@ -15,25 +15,38 @@ function solution1(n) {
 
   while (n !== 0) {
     if (n % 3 == 0) {
-      temp.unshift(numArray[0]);
+      temp.unshift(numArray[0]); // 4를 temp 앞 쪽에 unshift.
       n = Math.floor(n / 3) - 1;
     } else {
-      temp.unshift(numArray[n % 3]);
+      temp.unshift(numArray[n % 3]); // 1 또는 2를 temp 앞 쪽에 unshift
       n = Math.floor(n / 3);
     }
     count++;
   }
-  answer = temp.join("");
+
+  answer = temp.join(""); //
+
   return answer;
 }
 
-function solution1(n) {
+/*
+테스트 1 〉	통과 (1.70ms, 37.4MB)
+테스트 2 〉	통과 (1.71ms, 37.5MB)
+테스트 3 〉	통과 (1.72ms, 37.4MB)
+테스트 4 〉	통과 (1.60ms, 37.5MB)
+테스트 5 〉	통과 (1.70ms, 37.6MB)
+테스트 6 〉	통과 (1.73ms, 37.7MB)
+*/
+
+function solution12(n) {
   const strange = [1, 2, 4];
   const indexes = [];
 
   while (true) {
     indexes.push(strange[(n - 1) % 3]);
+
     if (n - 1 < 3) break;
+
     n = Math.floor((n - 1) / 3);
   }
 
@@ -43,12 +56,54 @@ function solution1(n) {
 /*
 
 효율성 테스트
-테스트 1 〉	통과 (1.68ms, 37.2MB)
-테스트 2 〉	통과 (1.68ms, 37.3MB)
-테스트 3 〉	통과 (1.61ms, 37.4MB)
-테스트 4 〉	통과 (1.62ms, 37.3MB)
-테스트 5 〉	통과 (1.58ms, 37.3MB)
-테스트 6 〉	통과 (1.62ms, 37.4MB)
+
+테스트 1 〉	통과 (1.73ms, 37.5MB)
+테스트 2 〉	통과 (1.66ms, 37.4MB)
+테스트 3 〉	통과 (1.68ms, 37.2MB)
+테스트 4 〉	통과 (1.67ms, 37.3MB)
+테스트 5 〉	통과 (1.75ms, 37.4MB)
+테스트 6 〉	통과 (1.70ms, 37.6MB)
+
+*/
+
+function solution13(n) {
+  // 재귀함수 사용
+  const strange = [1, 2, 4];
+
+  function append124(m, str = "") {
+    if (!str) {
+      // 초기값
+      str += strange[(m - 1) % 3];
+    }
+
+    if (m - 1 < 3) return str; // 탈출조건
+
+    const M = Math.floor((m - 1) / 3); // 몫
+
+    return append124(M, strange[(M - 1) % 3] + str);
+  }
+
+  return append124(n);
+}
+
+/*
+
+테스트 1 〉	통과 (1.79ms, 37.4MB)
+테스트 2 〉	통과 (1.80ms, 37.4MB)
+테스트 3 〉	통과 (1.60ms, 37.4MB)
+테스트 4 〉	통과 (1.71ms, 37.3MB)
+테스트 5 〉	통과 (1.70ms, 37.4MB)
+테스트 6 〉	통과 (1.68ms, 37.2MB)
+
+*/
+
+/* 설명
+
+1. 예전 풀이에서는 순서를 맞추기 위해 unshift 사용 
+
+2. unshift 대신 array에 item을 push해두고 마지막에 reverse하는 방법으로 다시 짜봄
+   
+3. reverse 메소드 사용으 줄여보고자 재귀를 사용
 
 */
 
@@ -62,6 +117,7 @@ function solution(progresses, speeds) {
   days.forEach((day, i) => {
     const nextDay = days[i + 1];
     if (current < (nextDay || Infinity)) {
+      //nextDay값이 undefined일 경우, Infinty와 current를 비교.
       answer.push(count);
       current = nextDay;
       count = 1;
@@ -92,16 +148,18 @@ function solution4(s) {
 
 // #5 예산 +4
 
+// O(n^2 * logn)
 function solution5(d, budget) {
-  let answer = 0;
-  let count = 0;
+  let answer = 0; // 더해진 항목의 개수를 저장
+  let total = 0;
   for (let b of d.sort((a, b) => a - b)) {
-    count += b;
-    if (count > budget) {
+    total += b;
+
+    if (total > budget) {
       return answer;
-    } else {
-      answer++;
     }
+
+    answer++;
   }
   return answer;
 }
@@ -127,7 +185,9 @@ function getGcd(a, b) {
 function solution(n, m) {
   const [s, b] = [n, m].sort();
   const getGcd = (a, b) => (b % a ? getGcd(b % a, a) : a);
+
   const gcd = getGcd(s, b);
+
   return [gcd, (s * b) / gcd];
 }
 
