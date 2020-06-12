@@ -1,3 +1,30 @@
+// 탑
+
+function solution(heights) {
+  return heights.map((h, i) => {
+    while (heights[i] <= h) {
+      i--;
+    }
+    return ++i;
+  });
+}
+
+// 멀쩡한 사각형
+
+function solution(w, h) {
+  var answer = w * h;
+
+  if (w === h) {
+    return answer - w;
+  }
+
+  for (let i = 0; i < h; i++) {
+    answer -= Math.ceil(((i + 1) * w) / h) - Math.floor((i * w) / h);
+  }
+
+  return answer;
+}
+
 // 트럭
 // failed - 테케 통과
 
@@ -46,23 +73,7 @@ function solution(N, stages) {
     .map((i) => i[0]);
 }
 
-// 7. 멀쩡한 사각형
-
-function solution(w, h) {
-  var answer = w * h;
-
-  if (w === h) {
-    return answer - w;
-  }
-
-  for (let i = 0; i < h; i++) {
-    answer -= Math.ceil(((i + 1) * w) / h) - Math.floor((i * w) / h);
-  }
-
-  return answer;
-}
-
-// 8. 탑
+// 실패율
 function solution(N, stages) {
   let count = {};
   stages.forEach((stage) => (count[stage] = ++count[stage] || 1));
@@ -82,17 +93,6 @@ function solution(N, stages) {
   const ans = percent.sort((a, b) => parseFloat(b[1] - a[1]).map((i) => i[0]));
   return ans;
 }
-
-// 자기주도적 목표한 결과 달성
-// 덕질 경험
-// 시간 관리
-// 상호작용을 통해 시너지
-// 인정받는 개발자로 성장하고 싶음
-// 부스트캠프 커뮤니티를 존중, 건강한 학습 문화 기여
-// 4일 1차 코테
-// 11일 2차 코테
-
-// 열정, 집중력을 증명할 증빙자료
 
 // 가장 큰 수
 
