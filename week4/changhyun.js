@@ -134,6 +134,7 @@ function solution(progresses, speeds) {
 
 function solution3(arr, divisor) {
   answer = arr.filter((i) => i % divisor === 0).sort((a, b) => a - b);
+  // divisor가 0인 것만
 }
 return answer.length === 0 ? [-1] : answer;
 
