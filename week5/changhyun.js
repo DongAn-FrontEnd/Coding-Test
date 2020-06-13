@@ -41,7 +41,7 @@ function solution(citations) {
     if (sorted[i + 1] <= i + 1) return i + 1;
   }
 }
-// Solved solution , 테케 9 : 최소가 length보다 클 때 [24,42]
+// 통과 , 테케 9 : 최소가 length보다 클 때 [24,42]
 
 function solution(citations) {
   const sorted = citations.sort((a, b) => b - a);
@@ -105,31 +105,39 @@ function solution(n, words) {
 
 // sort문에서, str과 num을 구해놓고 비교 >> 문자가 다를 경우 곧바로 return하면 되는데, 이렇게 구할 피룡가 없음.
 function solution(files) {
-  var answer = [];
-  let numberIdx = {};
-  files.sort((a, b) => {
-    const [strA, numA] = getStringNumber(a);
-    const [strB, strB] = getStringNumber(b);
-  });
-}
-function getStringNumber(str) {
-  const string = "";
-  const number = "";
-  let findNum = false;
-  let i = 0;
+  const getStringNumber = (str) => {
+    let string = "";
+    let number = "";
+    let foundString = false;
 
-  for (let i = 0; i < str.length; i++) {
-    if (str[i] > 10) {
-      // 문자열일 떄
-      if (foundString) return;
-      string += str[i];
-    } else {
-      // 숫자가 나올 떄
-      foundString = false;
-      number += str[i];
+    for (let i = 0; i < str.length; i++) {
+      let strCode = str[i].charCodeAt();
+      if (strCode > 57 || strCode < 48) {
+        // 문자열일 떄
+        if (foundString) break;
+        string += str[i];
+      } else {
+        // 숫자가 나올 떄
+        foundString = true;
+        number += str[i];
+      }
     }
-  }
-  return [string, +number];
+    return [string.toUpperCase(), +number];
+  };
+
+  return files
+    .map((item, i) => ({ item, i }))
+    .sort((a, b) => {
+      const [strA, numA] = getStringNumber(a.item);
+      const [strB, numB] = getStringNumber(b.item);
+
+      if (strA > strB) return 1;
+      if (strA < strB) return -1;
+      if (numA > numB) return 1;
+      if (numA < numB) return -1;
+      if (numA === numB) return a.i - b.i;
+    })
+    .map((obj) => obj.item);
 }
 
 // const alphabet = (str) => 1 or numberIndex;
@@ -166,3 +174,118 @@ function solution(files) {
     }
   });
 }
+
+// 통과 +9  +' '는 0이 됨. isNaN으로 체크 불가 >> charCodeAt을 사용.
+// js sort는 unstable sort임 따라서, map을 사용해 index를 잡아줘야함.
+
+// # 소수 찾기
+
+// 테케 2,5,14 통과
+function solution(skill, skill_trees) {
+  var answer = 0;
+  let skillSet = skill.split("");
+  let currentCheck = 0;
+  skill_trees.forEach((item) => {
+    let isPossible = true;
+    for (let c of item) {
+      for (let i = currentCheck + 1; i < skillSet.length; i++) {
+        if (skillSet[i] === c) {
+          isPossible = false;
+          currentCheck++;
+        }
+        break;
+      }
+      if (!isPossible) return;
+    }
+    answer++;
+  });
+
+  return answer;
+}
+
+// # 스킬트리 +6
+
+function solution(skill, skill_trees) {
+  var answer = 0;
+  let skillSet = skill.split("");
+
+  skill_trees.forEach((item) => {
+    let isPossible = true;
+    let currentCheck = 0;
+
+    for (let c of item) {
+      if (c === skillSet[currentCheck]) {
+        currentCheck++;
+        continue;
+      }
+      for (let i = currentCheck + 1; i < skillSet.length; i++) {
+        if (skillSet[i] === c) {
+          isPossible = false;
+          break;
+        }
+      }
+
+      if (!isPossible) return;
+    }
+    answer++;
+  });
+
+  return answer;
+}
+
+// # 쇠막대기 +3
+/*
+0 () 1 2 3 ()() 2 3 () 2 () 1 0 1 ()
+   
+1층에선, +1 (add)
+2층에선, +2 (add)
+3층에선, +3 (add)
+내려갈 경우, +1
+3,3,+1,3,+1,2,+1,+1,1,+1
+
+3 : 1+1, 1
+2 : 1+1
+1 : 1+1+1+1, 1
+아래층으로 갈 경우, 새로운 스타트
+'0' '33','3','2','1'
+*/
+
+function solution(arrangement) {
+  let answer = 0;
+  let stage = 0;
+
+  for (let i = 0; i < arrangement.length; i++) {
+    const cur = arrangement[i];
+    const next = arrangement[i + 1];
+
+    if (cur === "(" && next === ")") {
+      answer += stage;
+      i += 1;
+    } else {
+      if (cur === "(") {
+        stage++;
+      } else {
+        stage--;
+        answer++;
+      }
+    }
+  }
+  return answer;
+}
+// function solution(arrangement) { 위 식을 가독성 좋게 만드려면..?
+//   let ans = 0;
+//   let stage = 0;
+//   arrangement.reduce((ans, current, i) => {
+//     if (current === current[i + 1]) {
+//       ans += stage;
+//       return ans;
+//     } else {
+//       if (current === "(") {
+//         stage++;
+//       } else {
+//         stage--;
+//         ans--;
+//       }
+//     }
+//   });
+// }
