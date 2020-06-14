@@ -11,7 +11,7 @@ function solution(n) {
 }
 
 // +9 문제 오류였음 : 피보나치 결과를 나눠서 push
-
+// 시간 : O(n) 공간 : O(1)
 function solution(n) {
   const fib = [0, 1];
 
@@ -42,7 +42,8 @@ function solution(citations) {
   }
 }
 // 통과 , 테케 9 : 최소가 length보다 클 때 [24,42]
-
+// 시간 : O(nlogn + n) = O(nlogn)
+// 공간 : O(n)
 function solution(citations) {
   const sorted = citations.sort((a, b) => b - a);
 
@@ -58,7 +59,6 @@ function solution(citations) {
 // findIndex(element, index) return index
 
 // # N개의 최소공배수 +7
-
 function solution(arr) {
   const gcd = (a, b = 1) => {
     let r = a % b;
@@ -74,7 +74,8 @@ function solution(arr) {
 }
 
 // # 끝말잇기 +4
-
+// 같은 글자가 k개 일 떄,
+// 시간 : O(n*(1+1+1+1+1+(n-k)[has판별]+1+1)) = O(n*(n-k))
 function solution(n, words) {
   const check = new Set();
 
@@ -84,7 +85,7 @@ function solution(n, words) {
     let tern = Math.floor(i / n) + 1;
 
     if ((words[i - 1] || words[0][0]).slice(-1) !== words[i][0]) {
-      // 뒷자리, 앞자리 다를 떄
+      // 뒷/앞글자가 서로 다를 떄
       return [player, tern];
     }
 
@@ -101,24 +102,29 @@ function solution(n, words) {
   return [0, 0];
 }
 
-// # [3차] 파일명 정렬 // 테케 1,2만 통과
+// # [3차] 파일명 정렬 +9
 
+// ' '는 0이 됨. isNaN으로 체크 불가 >> charCodeAt을 사용.
+// js sort는 unstable sort임 따라서, 비교 값이 같을 경우 index를 따져줘야함.
 // sort문에서, str과 num을 구해놓고 비교 >> 문자가 다를 경우 곧바로 return하면 되는데, 이렇게 구할 피룡가 없음.
+// 풀리긴 했지만 비효율적이라 생각
+
+// 시간 복잡도 : O(n[map] * nlogn[sort] * (str.length+str.length+5)*n[map]) = O(n^3logn*`str.length`)
 function solution(files) {
   const getStringNumber = (str) => {
-    let string = "";
-    let number = "";
+    let string = ""; // 처음 등장하는 문자열
+    let number = ""; // 처음 등장하는 숫자열
     let foundString = false;
 
     for (let i = 0; i < str.length; i++) {
       let strCode = str[i].charCodeAt();
       if (strCode > 57 || strCode < 48) {
-        // 문자열일 떄
+        // 문자일 떄
         if (foundString) break;
         string += str[i];
       } else {
-        // 숫자가 나올 떄
-        foundString = true;
+        // 숫자일 떄
+        foundString = true; // 숫자 이후의 문자 순회를 방지
         number += str[i];
       }
     }
@@ -130,6 +136,7 @@ function solution(files) {
     .sort((a, b) => {
       const [strA, numA] = getStringNumber(a.item);
       const [strB, numB] = getStringNumber(b.item);
+      // getStringNumber의 비용이 클 거라 생각
 
       if (strA > strB) return 1;
       if (strA < strB) return -1;
@@ -143,6 +150,8 @@ function solution(files) {
 // const alphabet = (str) => 1 or numberIndex;
 // const number = (index, str) => 1
 
+// sort문을 바로 실행해, 순차적으로 따져보려 시도해봄.
+// +'  ' = 0, stability를 고려해서 다시 풀어봐야할 풀이
 function solution(files) {
   return files.sort((a, b) => {
     for (let i = 0; i < a.length; i++) {
@@ -175,10 +184,9 @@ function solution(files) {
   });
 }
 
-// 통과 +9  +' '는 0이 됨. isNaN으로 체크 불가 >> charCodeAt을 사용.
-// js sort는 unstable sort임 따라서, map을 사용해 index를 잡아줘야함.
-
 // # 소수 찾기
+
+// # 스킬트리
 
 // 테케 2,5,14 통과
 function solution(skill, skill_trees) {
@@ -203,8 +211,8 @@ function solution(skill, skill_trees) {
   return answer;
 }
 
-// # 스킬트리 +6
-
+// 통과 +6
+// 시간복잡도 : O(s+st*item.length*(s-currentCheck))
 function solution(skill, skill_trees) {
   var answer = 0;
   let skillSet = skill.split("");
@@ -234,22 +242,7 @@ function solution(skill, skill_trees) {
 }
 
 // # 쇠막대기 +3
-/*
-0 () 1 2 3 ()() 2 3 () 2 () 1 0 1 ()
-   
-1층에선, +1 (add)
-2층에선, +2 (add)
-3층에선, +3 (add)
-내려갈 경우, +1
-3,3,+1,3,+1,2,+1,+1,1,+1
-
-3 : 1+1, 1
-2 : 1+1
-1 : 1+1+1+1, 1
-아래층으로 갈 경우, 새로운 스타트
-'0' '33','3','2','1'
-*/
-
+// 시간 복잡도 O(n * (1+1+3||(2||3))) = O(n * 5) d = O(n)
 function solution(arrangement) {
   let answer = 0;
   let stage = 0;
@@ -272,6 +265,23 @@ function solution(arrangement) {
   }
   return answer;
 }
+
+/* 풀이 중 생각해본 접근 방식들
+0 () 1 2 3 ()() 2 3 () 2 () 1 0 1 ()
+   
+1층에선, +1 (add)
+2층에선, +2 (add)
+3층에선, +3 (add)
+내려갈 경우, +1
+3,3,+1,3,+1,2,+1,+1,1,+1
+
+3 : 1+1, 1
+2 : 1+1
+1 : 1+1+1+1, 1
+아래층으로 갈 경우, 새로운 스타트
+'0' '33','3','2','1'
+*/
+
 // function solution(arrangement) { 위 식을 가독성 좋게 만드려면..?
 //   let ans = 0;
 //   let stage = 0;
