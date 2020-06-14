@@ -56,3 +56,18 @@ function isPrime(num){
     }
     return true;
 }
+
+// 쇠막대기
+function solution(arrangement) {
+  var answer = 0;
+  let line = [];
+  for(let i = 0; i < arrangement.length - 1; ++i){    
+    // case 1. ((
+    if(arrangement[i] === '(' && arrangement[i + 1] === '(') line.push(0);
+    // case 2. ()
+    if(arrangement[i] === '(' && arrangement[i + 1] === ')') line = line.map(e => e + 1);
+    // case 3. ))
+    if(arrangement[i] === ')' && arrangement[i + 1] === ')') answer += line.pop() + 1;
+  }
+  return answer;
+}
