@@ -150,3 +150,24 @@ function solution(n, words) {
   }
   return [0,0];
 }
+
+// H-Index
+function solution(citations) {
+  let h = citations[0];
+  let citationsLen = citations.length;
+  let upCount;
+  let downCount;
+  
+  citations.sort((a, b) => b - a); // 오름차순 정렬
+  while (true) {
+    upCount = 0;
+    downCount = 0;
+    for (let i = 0; i < citationsLen; ++i)
+    {
+      if (citations[i] >= h) ++upCount;      
+      else ++downCount;      
+    }
+    if (upCount >= h && downCount <= h) return h;
+    --h;
+  }  
+}
