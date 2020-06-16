@@ -191,3 +191,54 @@ function isSkillTree(skill, skillTree){
   }
   return true;
 }
+
+// N개의 최소공배수
+function solution(arr) {  
+  for(let i = 0; i !== arr.length - 1;)
+    arr.push(LCM(arr.shift(), arr.shift()));  
+  return arr[0];
+}
+
+// 최소공배수
+function LCM(a,b){
+  return a * b / GCD(a,b);
+}
+
+// 최대공약수
+function GCD(a, b){
+  let aList = primeFactorization(a);
+  let bList = primeFactorization(b);
+  let map = new Map();
+  let GCD = 1;
+  let CD = [];
+  for(let key of aList){
+      let temp = map.get(key);
+      if(temp) map.set(key, ++temp);
+      else map.set(key, 1);        
+  }
+  for(let key of bList){
+      let temp = map.get(key);
+      if(temp) map.set(key, ++temp);
+      else map.set(key, 1);        
+  }
+
+  for(let key of map.keys()){
+      let value = map.get(key)
+      if( value > 1){
+          CD.push(key);
+      }
+  }
+  GCD = CD.pop();
+  return GCD;
+}
+
+// 소인수분해
+function primeFactorization(n){
+  let arr = [];
+  let div = 1;
+  while(div <= n){
+      if(n % div === 0) arr.push(div);
+      ++div;
+  }
+  return arr;
+}
