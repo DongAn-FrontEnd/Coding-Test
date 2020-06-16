@@ -171,3 +171,23 @@ function solution(citations) {
     --h;
   }  
 }
+
+// 스킬트리
+function solution(skill, skill_trees) {
+  let answer = 0;
+  skill = skill.split("");
+  skill_trees.forEach(skillTree =>{
+    if(isSkillTree(skill, skillTree)) ++answer;
+  })
+  return answer;
+}
+
+function isSkillTree(skill, skillTree){
+  let order = [];
+  skill.forEach(e => {order.push(skillTree.indexOf(e))});
+  for(let i = 0; i < order.length - 1; ++i){
+    if(order[i] === -1 && order[i+1] >= 0) return false;
+    if(order[i] !== -1 && order[i+1] !== -1 && order[i] > order[i+1]) return false;
+  }
+  return true;
+}
