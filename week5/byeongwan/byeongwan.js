@@ -71,3 +71,82 @@ function solution(arrangement) {
   }
   return answer;
 }
+
+
+// 파일명 정렬 - fail
+function solution(files) {
+  var answer = [];
+  let map = new Map();  
+
+  return files.sort((a,b) => {
+    // HEAD 비교
+    let aHead;
+    let bHead;
+    let aIdx;
+    let bIdx;
+    for(let i = 0; i < a.length; ++i){
+      if(!isNaN(a[i])){
+        aHead = a.slice(0, i).toLowerCase();
+        aIdx = i;
+        break;
+      }
+    }
+    for(let i = 0; i < b.length; ++i){
+      if(!isNaN(b[i])){
+        bHead = b.slice(0, i).toLowerCase();
+        bIdx = i;
+        break;
+      }
+    }
+    // HEAD가 같다면 NUMBER 비교
+    if(aHead === bHead){      
+      let aNum;
+      let bNum;
+      for(let i = aIdx; i < a.length; ++i){
+          if(isNaN(a[i]) || i > aIdx + 5){
+            aNum = parseInt(a.slice(aIdx, i));
+            aIdx = i;
+            break;
+          }
+      }
+      for(let i = bIdx; i < b.length; ++i){
+        if(isNaN(b[i]) || i > bIdx + 5){
+          bNum = parseInt(b.slice(bIdx, i));
+          bIdx = i;
+          break;
+        }
+      }
+      // NUMBER가 같다면 TAIL 비교
+      if(aNum !== bNum) return aNum - bNum;
+      else{
+        let aTail = a.slice(aIdx, a.length).toLowerCase();
+        let bTail = b.slice(bIdx, b.length).toLowerCase();
+        return +(aTail > bTail);
+      }
+    }
+    // HEAD가 다르면 문자열 비교
+    else return +(a > b);    
+  })
+}
+
+// 영어 끝말잇기
+function solution(n, words) {  
+  let speakingCounts = new Array(n).fill(0); // 사람 마다 말한 횟수를 저장
+  let wordsMap = new Map();  
+  let wordsLen = words.length;  
+  let idx = 1;
+  wordsMap.set(words[0], 1);
+  speakingCounts[0] = 1;
+  for(let i = 1; i < wordsLen; ++i){
+    ++speakingCounts[idx];      // 말한 횟수 추가
+    
+    // 이미 등장한 단어 or 앞 사람의 마지막 글자와 현재 사람의 첫 글자가 다름 or 글자가 1개라면 return
+    if(wordsMap.get(words[i]) || words[i-1].slice(-1) !== words[i][0] || words[i].length === 1) return[idx+1, speakingCounts[idx]];
+    
+    // 조건을 만족하지 않으면
+    wordsMap.set(words[i], 1);  // 해시맵에 단어 추가
+    ++idx;                      // 다음 사람으로 인덱스 가리키기
+    idx %= n;                   // n으로 mod연산하여 순환하기
+  }
+  return [0,0];
+}
