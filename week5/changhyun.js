@@ -5,9 +5,9 @@ function solution(n) {
   const fib = (n) => {
     if (n === 0) return 0;
     if (n === 1) return 1;
-    return solution(n - 1) + solution(n - 2);
+    return (fib(n - 1) + fib(n - 2)) % 1234567;
   };
-  return fib(n) % 1234567;
+  return fib(n);
 }
 
 // +9 문제 오류였음 : 피보나치 결과를 나눠서 push
@@ -49,10 +49,22 @@ function solution(citations) {
 
   if (sorted[0] === 0) return 0;
 
-  for (let i = 0; i < sorted.length; i++) {
-    if ((sorted[i + 1] || 0) <= i + 1) return i + 1;
+  // for (let i = 0; i < sorted.length; i++) {
+  //   if ((sorted[i + 1] || 0) <= i + 1) return i + 1;
+  // } //아래와 같이 최적화
+  for (let i = 1; i < sorted.length + 1; i++) {
+    if ((sorted[i] || 0) <= i) return i;
   }
 }
+
+/*
+
+내림차순으로 정렬 시, index+1을 x값, index에 해당하는 item value를 y값으로 생각
+y=x 값과 같거나 더 작은 값이 나올 경우, y=x에 해당되는 index+1 값을 리턴함.
+array의 모든 값이 y=x 직선 위에 존재할 경우(최소가 length보다 클 때)를 처리하기 위해,
+length+1까지 for문을 돌리고, array[length] (undefined)가 나올 경우 if문이 반드시 true가 되게끔 0을 or처리해 length값을 return함. 
+
+*/
 
 // find(element, idex) return element
 // indexOf(value, startIndex) return index
@@ -102,6 +114,17 @@ function solution(n, words) {
   return [0, 0];
 }
 
+/*
+
+같은 문자를 체크하기 위해 set 객체 생성
+words 배열의 index를 i로 저장하고, while문을 통해 words 배열을 순회
+player는 나머지를, tern은 몫을 통해 구하고,
+1. 앞에 위치한 단어의 뒷글자 (words[i-1].slice(-1)과 현재 index에 위치한 words[i]의 첫글자를 비교해 다를 경우 리턴.
+2. 이미 나온 단어일 경우 리턴.
+1,2 조건에 해당되지 않는 단어일 경우, check에 단어를 추가하고, 다음 단어를 확인 
+
+*/
+
 // # [3차] 파일명 정렬 +9
 
 // ' '는 0이 됨. isNaN으로 체크 불가 >> charCodeAt을 사용.
@@ -146,6 +169,13 @@ function solution(files) {
     })
     .map((obj) => obj.item);
 }
+
+/*
+
+설명 : files의 각 아이템에 대해 첫 문자열과, 첫 숫자열을 찾아 대소비교.
+stable한 sort를 위해 file의 item과 index를 객체에 저장하고, sort문에서 item이 동일할 경우 index 비교를 통해 stable을 보장함.
+
+*/
 
 // const alphabet = (str) => 1 or numberIndex;
 // const number = (index, str) => 1
@@ -193,9 +223,10 @@ function solution(skill, skill_trees) {
   var answer = 0;
   let skillSet = skill.split("");
   let currentCheck = 0;
-  skill_trees.forEach((item) => {
+
+  skill_trees.forEach((skill_tree) => {
     let isPossible = true;
-    for (let c of item) {
+    for (let c of skill_tree) {
       for (let i = currentCheck + 1; i < skillSet.length; i++) {
         if (skillSet[i] === c) {
           isPossible = false;
@@ -217,21 +248,25 @@ function solution(skill, skill_trees) {
   var answer = 0;
   let skillSet = skill.split("");
 
-  skill_trees.forEach((item) => {
+  skill_trees.forEach((skill_tree) => {
     let isPossible = true;
-    let currentCheck = 0;
+    let currentChar = 0;
 
-    for (let c of item) {
-      if (c === skillSet[currentCheck]) {
-        currentCheck++;
+    for (let c of skill_tree) {
+      if (c === skillSet[currentChar]) {
+        // 스킬셋과 단어 위치가 같으면, 다음 단어를 체크.
+        currentChar++;
         continue;
       }
-      for (let i = currentCheck + 1; i < skillSet.length; i++) {
+      for (let i = currentChar + 1; i < skillSet.length; i++) {
+        // 단어가 다를 경우에는, skillset을 돌며 같은 단어가 있는지 확인
         if (skillSet[i] === c) {
           isPossible = false;
           break;
+          // 있을 경우, 선행 스킬을 배우지 않았으므로 answer값 증가 없이 forEach문 다음 item 순회
         }
       }
+      // 만약 skillset에 포함된 단어가 모두 포함되지 않을 경우, skill_tree의 다음 문자를 skillset과 비교
 
       if (!isPossible) return;
     }
@@ -240,20 +275,25 @@ function solution(skill, skill_trees) {
 
   return answer;
 }
+/*
+
+
+
+*/
 
 // # 쇠막대기 +3
 // 시간 복잡도 O(n * (1+1+3||(2||3))) = O(n * 5) d = O(n)
 function solution(arrangement) {
   let answer = 0;
   let stage = 0;
-
   for (let i = 0; i < arrangement.length; i++) {
     const cur = arrangement[i];
     const next = arrangement[i + 1];
 
     if (cur === "(" && next === ")") {
+      // 레이저 위치일 경우
       answer += stage;
-      i += 1;
+      i += 1; // 레이저 다음 괄호로 넘기기 위해
     } else {
       if (cur === "(") {
         stage++;
@@ -265,6 +305,13 @@ function solution(arrangement) {
   }
   return answer;
 }
+
+/*
+  설명 : 
+  레이저 위치일 경우, stage값을 answer에 추가.
+  좌괄호일 경우, stage를 증가
+  우괄호일 경우, stage 감소 및 answer++(층 분리에 의한 +1)
+*/
 
 /* 풀이 중 생각해본 접근 방식들
 0 () 1 2 3 ()() 2 3 () 2 () 1 0 1 ()
