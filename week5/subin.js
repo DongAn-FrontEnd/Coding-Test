@@ -257,3 +257,83 @@ function solution(file){
 //console.log(solution(["F-5 Freedom Fighter", "B-50 Superfortress", "A-10 Thunderbolt II", "F-14 Tomcat"]));
 //console.log(solution(["F23","F15"]));
 
+
+
+//N개의 최소공배수
+function solution(arr){
+    var answer;
+    var v=1; //최대공약수
+    for(var i=1;i<=100;i++){
+        var len = arr.filter(val=>val%i===0).length;
+        v = len === arr.length ? i : v; 
+    }
+
+    answer = arr.reduce((pre,value)=>pre*value);
+    if(v === 1) return answer;
+    else return answer / (v * arr.length);
+}
+
+function solution(arr){
+    var answer;
+    var v = arr[0]
+    var len = arr.length;
+    for(var i=1;i<arr.length;i++){
+        var temp = gcd1(v,arr[i]);
+        v = v * arr[i] / temp 
+    }
+
+    return v;
+
+}
+function gcd1(a,b){
+    var v=1;
+    for(var i=1;i<=100;i++){
+        if(a%i===0 && b%i === 0) v=i;
+    }
+    return v;
+}
+
+
+function gcd2(a,b){
+    var max = a>b?a:b;
+    var min = a>b?b:a;
+    var temp;
+    while(min!=0){
+        temp = min;
+        min = max % min;
+        max = temp;
+    }
+
+    return max;
+}
+
+console.log(solution([2,6,8,14]));
+console.log(gcd1(6,8));
+
+피보나치
+function Fibonacci(n){
+    
+    if(n >= 2) return solution(n-1)+solution(n-2);
+    else if(n==1) return 1;
+    else return 0;
+}
+
+function solution(n){
+    return Fibonacci(n) % 1234567;
+}
+
+//반복문 횟수 = n-1;
+function solution(n){
+    answer = 0;
+    var a = 0;
+    var b = 1;
+    for(var i=1;i<n;i++){
+        answer = (a+b) % 1234567;
+        a = b % 1234567;
+        b = answer; 
+    }
+
+    return answer;
+}
+
+console.log(solution(3));
