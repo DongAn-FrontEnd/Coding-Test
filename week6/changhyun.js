@@ -1,20 +1,9 @@
-function solution(n) {
-  const binary = "0" + n.toString(2);
-  let occured = false;
-  let ans = "";
+// 위장
 
-  for (let i = binary.length - 1; i >= 0; i--) {
-    const prev = binary[i - 1];
-    const cur = binary[i];
-    if (!occured && prev === "0" && cur === "1") {
-      ans = "10" + ans;
-      i -= 1;
-      occured = true;
-    }
-    ans = binary[i] + ans;
-  }
-
-  return parseInt(ans, 2);
+function solution(clothes) {
+  let hash = {};
+  clothes.forEach(([cloth, species]) => (hash[species] = ++hash[species] || 1));
+  return Object.values(hash).reduce((a, b) => (a + 1) * (b + 1) - 1);
 }
 
 // 다음 큰 숫자 통과
@@ -57,3 +46,63 @@ function solution(n) {
 이진수로 바꿔 1의 개수를 구하고, 원래 값의 1의 개수(count)와 같을 경우, 그 값을 return
 
 */
+
+// 구명보트
+
+function solution(people, limit) {
+  var answer = 0;
+  people.sort((a, b) => b - a);
+  const length = people.length;
+  let back = people.findIndex((i) => i <= limit / 2);
+  back = back === -1 ? length : back;
+  let front = back - 1;
+
+  const count = { front: front + 1, back: length - back };
+  let isMoreBack = true;
+  while (isMoreBack) {
+    if (people[front] + people[back] <= limit) {
+      answer++;
+      front--;
+    } else {
+      if (back > length - 1 || front < 0) isMoreBack = false;
+    }
+    back++;
+  }
+
+  const extra = count.front - answer + Math.ceil((count.back - answer) / 2);
+  answer += extra;
+
+  return answer;
+}
+
+// Running Sum of 1d Array
+
+var runningSum = function (nums) {
+  const arr = Array(nums.length);
+  arr[0] = nums[0];
+
+  for (let i = 1; i < nums.length; i++) {
+    arr[i] = arr[i - 1] + nums[i];
+  }
+
+  return arr;
+};
+
+// shuffle the array
+
+var shuffle = function (nums, n) {
+  const length = nums.length;
+  const arr = Array(length);
+  const half = length % 2 === 0 ? length / 2 : (length - 1) / 2;
+
+  for (let i = 0; i < half; i++) {
+    arr[2 * i] = nums[i];
+    arr[2 * i + 1] = nums[i + half];
+  }
+
+  if (length % 2 === 1) {
+    arr[length - 1] = nums[length - 1];
+  }
+
+  return arr;
+};
