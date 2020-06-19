@@ -69,3 +69,23 @@ function solution(people, limit) {
     }
     return boat;
 }
+
+// 1480	Running Sum of 1d Array
+var runningSum = function(nums) {
+  let output = new Array(nums.length).fill(0);
+  output[0] = nums[0];
+  for(let i = 1; i < output.length; ++i){
+    output[i] += output[i - 1] + nums[i];
+  }
+  return(output);
+};
+
+// 1470. Shuffle the Array
+var shuffle = function(nums, n) {
+  let answer = [];
+  for(let i = 0; i < n; ++i){
+    answer.push(nums[i]);
+    answer.push(nums[i + n]);
+  }
+  return answer;
+};
