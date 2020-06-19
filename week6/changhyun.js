@@ -6,7 +6,11 @@ function solution(clothes) {
   return Object.values(hash).reduce((a, b) => (a + 1) * (b + 1) - 1);
 }
 
-// 다음 큰 숫자 통과
+/*
+설명 : 모든 옷의 종류가 다르기 때문에 hash에 species 개수를 구하고, 경우의 수를 계산
+*/
+
+// 다음 큰 숫자
 function solution(n) {
   const count = n
     .toString(2)
@@ -22,6 +26,23 @@ function solution(n) {
         .filter((i) => i === "1").length
     )
       break;
+  }
+
+  return n;
+}
+// refactoring
+function solution(n) {
+  const countStrOne = (n) =>
+    n
+      .toString(2)
+      .split("")
+      .filter((i) => i === "1").length;
+
+  const count = countStrOne(n);
+
+  while (true) {
+    n++;
+    if (count === countStrOne(n)) break;
   }
 
   return n;
@@ -74,6 +95,8 @@ function solution(people, limit) {
 
   return answer;
 }
+
+people.sort((b, a) => b - a);
 
 // Running Sum of 1d Array
 
