@@ -1,9 +1,31 @@
+// 기능개발
+
+function solution(progresses, speeds) {
+  var answer = [];
+  let count = 1;
+  const days = progresses.map((p, i) => Math.ceil((100 - p) / speeds[i]));
+  let current = days[0];
+
+  for (let i = 0; i < days.length; i++) {
+    const nextDay = days[i + 1];
+    if (current < (nextDay || Infinity)) {
+      answer.push(count);
+      current = nextDay;
+      count = 1;
+    } else {
+      count++;
+    }
+  }
+
+  return answer;
+  // 4 2 3 4 2 7 12 4 2 31
+  // 4 4 4 4 4 7 12 12 12 31
+}
+
 // 후보키
 
 // 1st try
 // isUnique함수 문제점
-// 'a','bc','d'
-// 'ab','c','d'
 
 function solution(relation) {
   var answer = 0;
@@ -60,11 +82,9 @@ function solution(relation) {
 012  013   021 022 023         123    
 0123
 
-013에 의해 0123이 유일성을 만족하지 않을 수 있음.
+013에 의해 0123이 최소성을 만족하지 않을 수 있음.
 
 */
-03;
-(023)[(0, 3)], [0, 2], [0][(0, 2, 3)];
 
 function solution(relation) {
   var answer = 0;
@@ -106,13 +126,10 @@ function solution(relation) {
 
   return answer;
 }
-012345;
-12345;
-2345;
 
 // try 3
 // stack 초기 items 수정
-// 유일성 체크 추가
+// 최소성 체크 추가
 
 function solution(relation) {
   var answer = 0;
@@ -132,18 +149,16 @@ function solution(relation) {
   };
 
   const isUnique = (node) => {
-    // @param arr
-    const obj = {};
+    const set = new Set();
 
-    relation.forEach((row) => {
+    for (const row of relation) {
       const key = node.reduce((acc, each) => acc + "," + row[each], "");
-      obj[key] = obj[key] ? obj[key] + 1 : 1;
-    });
 
-    for (const key in obj) {
-      if (obj[key] > 1) {
+      if (set.has(key)) {
         return false;
       }
+
+      set.add(key);
     }
 
     return true;
@@ -160,14 +175,12 @@ function solution(relation) {
     const node = stack.shift();
 
     if (isUnique(node)) {
-      if (isMinimal(node)) {
-        answer++;
-      }
+      isMinimal(node) && answer++;
     } else {
-      let next = node[node.length - 1] + 1;
-      while (next < totalAttribute) {
-        stack.push([...node, next]);
-        next++;
+      let nextValue = node[node.length - 1] + 1;
+      while (nextValue < totalAttribute) {
+        stack.push([...node, nextValue]);
+        nextValue++;
       }
     }
   }
@@ -176,7 +189,7 @@ function solution(relation) {
 }
 
 // 캐시
-// 시간 초과
+// Doubly linked list 구현
 function solution(cacheSize, cities) {
   var answer = 0;
 
@@ -202,17 +215,12 @@ function solution(cacheSize, cities) {
         return;
       }
 
-      if (this.head === this.tail) {
-        this.tail.prev = newNode;
-        this.head = newNode;
-        this.size = 2;
-        return;
-      }
-
       this.head.prev = newNode;
       this.head = newNode;
       this.size++;
+    };
 
+    this.adjustSize = () => {
       if (this.size > this.maxSize) {
         const newTail = this.tail.prev;
         newTail.next = null;
@@ -227,22 +235,17 @@ function solution(cacheSize, cities) {
       while (current) {
         if (current.value === nodeValue) {
           if (current === this.head) {
-            // 1234
-            // 1
             return true;
           }
 
-          //1234
-          //   4
-          //4123
           if (current === this.tail) {
             this.tail = current.prev;
-            current.prev.next = null;
+            this.tail.next = null;
+          } else {
+            current.next.prev = current.prev;
+            current.prev.next = current.next;
           }
 
-          //1234
-          //  3
-          //3124
           this.head.prev = current;
           current.next = this.head;
           current.prev = null;
@@ -259,7 +262,9 @@ function solution(cacheSize, cities) {
   }
 
   const cache = new Cache(cacheSize);
-
+  if (cacheSize === 0) {
+    return 5 * cities.length;
+  }
   cities.forEach((_city) => {
     const city = _city.toLowerCase();
 
@@ -267,6 +272,7 @@ function solution(cacheSize, cities) {
       answer += 1;
     } else {
       cache.unshift(city);
+      cache.adjustSize();
       answer += 5;
     }
   });
@@ -274,12 +280,15 @@ function solution(cacheSize, cities) {
   return answer;
 }
 
-// 위 풀이 시간 초과 문제로 배열 사용
+// 배열 사용
 function solution(cacheSize, cities) {
   var answer = 0;
 
   function Cache() {
     this.stack = [];
+
+    // hit miss 유무 return
+    // hit일 경우 기존 값을 unshift
     this.find = (city) => {
       const index = this.stack.indexOf(city);
       if (index !== -1) {
@@ -288,6 +297,8 @@ function solution(cacheSize, cities) {
       }
       return false;
     };
+
+    // cacheSize 초과할 경우, 마지막 값 pop
     this.unshift = (city) => {
       this.stack.unshift(city);
       if (this.stack.length > cacheSize) {
@@ -529,7 +540,7 @@ function solution(gems) {
   }
 }
 
-// 투포인터 사용
+// 투포인터 사용 통과
 
 function solution(gems) {
   const set = new Set(gems);
@@ -554,18 +565,21 @@ function solution(gems) {
     if (end === gemsLength) {
       break;
     }
+
     add(comparator, gems[end]);
+
     if (comparator.size === gemSetSize) {
       while (comparator.size === gemSetSize) {
         substract(comparator, gems[start]);
-        start++;
+        start++; // start 포인터 이동
       }
       stack.push([start - 1, end]);
     }
 
-    end++;
+    end++; // end 포인터 이동
   }
 
+  // 최소값 찾기
   let min = Infinity;
   let minIndex = 0;
   stack.forEach((item, i) => {
